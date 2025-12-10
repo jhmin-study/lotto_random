@@ -2,6 +2,7 @@ from flask import Flask, render_template
 import random
 import requests
 import urllib3
+import os
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -67,4 +68,7 @@ def index():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # Render가 할당한 포트 가져오기, 없으면 기본 5000
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=True)
+    # app.run(debug=True)
