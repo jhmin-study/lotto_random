@@ -3,48 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <title>로또 번호 생성기</title>
+
     <style>
         body {
-            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+            background: linear-gradient(135deg, #e9efff, #f7f9ff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            padding: 40px 50px;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             text-align: center;
-            background: #f2f3f7;
-            padding-top: 50px;
+            width: 380px;
         }
-        .number {
-            display: inline-block;
-            background: #fff;
+
+        h1 {
+            margin-bottom: 25px;
+            font-size: 26px;
+            color: #304ffe;
+            font-weight: 700;
+        }
+
+        .numbers {
+            margin: 20px 0 30px 0;
+        }
+
+        .num {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 55px;
+            height: 55px;
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            line-height: 50px;
-            margin: 5px;
-            font-size: 22px;
-            font-weight: bold;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            background: white;
+            margin: 6px;
+            font-size: 20px;
+            font-weight: 700;
+            color: #304ffe;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            transition: transform 0.15s ease;
         }
+
+        .num:hover {
+            transform: translateY(-4px);
+        }
+
         .btn {
-            padding: 10px 20px;
-            margin-top: 30px;
-            background: #4f6df5;
+            background: #304ffe;
             color: white;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 18px;
             border: none;
+            padding: 14px 18px;
+            width: 100%;
+            border-radius: 12px;
+            font-size: 17px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.15s;
+        }
+
+        .btn:hover {
+            background: #1e3df5;
+            transform: translateY(-2px);
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 13px;
+            color: #666;
         }
     </style>
 </head>
 <body>
 
-    <h1>로또 번호 생성기</h1>
+    <div class="card">
+        <h1>로또 번호 생성기</h1>
 
-    {% for n in numbers %}
-        <div class="number">{{ n }}</div>
-    {% endfor %}
+        <div class="numbers">
+            {% for n in numbers %}
+                <div class="num">{{ n }}</div>
+            {% endfor %}
+        </div>
 
-    <br><br>
+        <button class="btn" onclick="location.reload()">✨ 다시 생성</button>
 
-    <button class="btn" onclick="location.reload()">다시 생성</button>
+        <div class="footer">Powered by Flask · Render</div>
+    </div>
 
 </body>
 </html>
