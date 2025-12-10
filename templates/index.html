@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>로또 번호 생성기</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: #f2f3f7;
+            padding-top: 50px;
+        }
+        .number {
+            display: inline-block;
+            background: #fff;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            line-height: 50px;
+            margin: 5px;
+            font-size: 22px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .btn {
+            padding: 10px 20px;
+            margin-top: 30px;
+            background: #4f6df5;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>로또 번호 생성기</h1>
+
+    {% for n in numbers %}
+        <div class="number">{{ n }}</div>
+    {% endfor %}
+
+    <br><br>
+
+    <button class="btn" onclick="location.reload()">다시 생성</button>
+
+</body>
+</html>
