@@ -1,6 +1,9 @@
 from flask import Flask, render_template
 import random
 import requests
+import urllib3
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 app = Flask(__name__)
 

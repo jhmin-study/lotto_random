@@ -104,3 +104,108 @@ body {
         font-size: 18px;
     }
 }
+
+/* 스마트폰 최적화 */
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        width: 100%;
+        margin: 0;
+        padding: 15px;
+        border-radius: 15px;
+    }
+
+    h1 {
+        font-size: 1.6rem;
+        text-align: center;
+    }
+
+    .lotto-ball {
+        width: 42px;
+        height: 42px;
+        font-size: 1.1rem;
+        margin: 4px;
+    }
+
+    .numbers-box {
+        gap: 8px;
+        justify-content: center;
+    }
+
+    .generate-btn {
+        width: 100%;
+        padding: 14px;
+        font-size: 1.1rem;
+        border-radius: 12px;
+    }
+
+    header nav {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .last-lotto-box {
+        padding: 10px;
+    }
+
+    button, .generate-btn {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    }
+
+    .mobile-header {
+    position: sticky;
+    top: 0;
+    background: rgba(20,20,20,0.7);
+    backdrop-filter: blur(8px);
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 999;
+}
+
+.mobile-header .logo {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #fff;
+}
+
+.mobile-header nav {
+    display: flex;
+    gap: 15px;
+}
+
+.mobile-header nav a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background: #111;
+        color: #eee;
+    }
+
+    .container {
+        background: #1d1d1d;
+        box-shadow: 0 0 10px rgba(255,255,255,0.04);
+    }
+
+    .generate-btn {
+        background: #4d6bff;
+        color: white;
+    }
+
+    .mobile-header {
+        background: rgba(0,0,0,0.6);
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+}
+
+
+}
