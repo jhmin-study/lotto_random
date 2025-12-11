@@ -2,54 +2,108 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>럭셔리 로또 번호 생성기</title>
+    <title>로또 번호 생성기</title>
     <link rel="stylesheet" href="/static/css/style.css" />
 </head>
+
 <body>
-
-<!-- <header class="mobile-header">
-    <div class="logo">LOTTO+</div>
-    <nav>
-        <a href="#today">오늘 번호</a>
-        <a href="#last">지난 당첨</a>
-        <a href="#about">소개</a>
-    </nav>
-</header> -->
-
-<header class="header">
-    <div class="logo">🎰 LUX LOTTO</div>
-    <nav class="menu">
-        <a href="/">Home</a>
-        <a href="#today">오늘 번호</a>
-        <a href="#last">지난 회차</a>
-    </nav>
-</header>
 
 <div class="container">
 
-    <section id="today">
-        <h2>✨ 오늘의 추천 번호</h2>
+    <!-- 오늘의 추천 번호 -->
+    <div class="card">
+        <h2>오늘의 추천 번호</h2>
 
-        <div class="balls">
-            {% for n in numbers %}
-            <div class="ball color-{{ loop.index }} animate">{{ n }}</div>
+        <div id="today-box" class="number-box">
+            {% for n in today %}
+                <span class="ball {{ get_color(n) }}">{{ n }}</span>
             {% endfor %}
         </div>
-    </section>
 
-    <section id="last">
-        <h2>📅 지난 회차 ({{ last_round }}회)</h2>
+        <button id="btn-generate" class="btn">새 번호 생성</button>
+    </div>
 
-        <div class="balls">
-            {% for n in last_numbers %}
-            <div class="ball color-{{ loop.index }}">{{ n }}</div>
+    <!-- 지난 회차 -->
+    <div class="card">
+        <h2>{{ last_round }}회 당첨 번호</h2>
+
+        <div class="number-box">
+            {% for n in last_nums %}
+                <span class="ball {{ get_color(n) }}">{{ n }}</span>
             {% endfor %}
-            <div class="ball bonus">+ {{ bonus }}</div>
+
+            <span class="plus">+</span>
+
+            <span class="ball black">{{ bonus }}</span>
         </div>
-    </section>
+    </div>
+
+    <!-- 추가 기능: 특정 회차 조회 -->
+    <div class="card">
+        <h2>원하는 회차 조회</h2>
+
+        <input id="round-input" type="number" placeholder="예: 1000" class="input" />
+        <button id="btn-search" class="btn">조회</button>
+
+        <div id="search-result"></div>
+    </div>
 
 </div>
+
+<script>
+function ballColor(n) {
+    if (n <= 10) return "yellow";
+    if (n <= 20) return "blue";
+    if (n <= 30) return "red";
+    if (n <= 40) return "green";
+    return "orange";
+}
+
+// 새 번호 생성
+document.getElementById("btn-generate").onclick = function () {
+    fetch("/generate")
+        .then(res => res.json())
+        .then(nums => {
+            let box = document.getElementById("today-box");
+            box.innerHTML = "";
+
+            nums.forEach(n => {
+                let el = document.createElement("span");
+                el.className = "ball " + ballColor(n) + " pop";
+                el.textContent = n;
+                box.appendChild(el);
+            });
+        });
+};
+
+// 특정 회차 조회
+document.getElementById("btn-search").onclick = function () {
+    let round = document.getElementById("round-input").value;
+
+    fetch("/get_round?round=" + round)
+        .then(res => res.json())
+        .then(data => {
+            let div = document.getElementById("search-result");
+
+            if (data.error) {
+                div.innerHTML = "<p>회차를 찾을 수 없습니다.</p>";
+                return;
+            }
+
+            let nums = data[0];
+            let bonus = data[1];
+
+            let html = `<div class='number-box'>`;
+            nums.forEach(n => {
+                html += `<span class="ball ${ballColor(n)}">${n}</span>`;
+            });
+            html += `<span class='plus'>+</span>`;
+            html += `<span class="ball black">${bonus}</span></div>`;
+
+            div.innerHTML = html;
+        });
+};
+</script>
 
 </body>
 </html>

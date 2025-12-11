@@ -1,211 +1,92 @@
-/* 다크모드 자동 지원 */
-@media (prefers-color-scheme: dark) {
-    body {
-        background-color: #111;
-        color: #eee;
-    }
-    .header {
-        background: #222;
-    }
-}
-
-/* 기본 스타일 */
 body {
     font-family: "Pretendard", sans-serif;
     margin: 0;
-    background: #f8f9fa;
-    color: #333;
-}
-
-.header {
-    background: #ffffff;
-    padding: 15px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 6px #ddd;
-}
-
-.logo {
-    font-size: 24px;
-    font-weight: 700;
-}
-
-.menu a {
-    margin-left: 15px;
-    text-decoration: none;
-    color: #444;
-    font-weight: 500;
+    background: #f4f5f7;
 }
 
 .container {
-    width: 100%;
-    max-width: 450px;
-    margin: 0 auto;
-    padding: 20px;
-    text-align: center;
+    max-width: 480px;
+    margin: auto;
+    padding: 15px;
 }
 
-.balls {
+.card {
+    background: #fff;
+    padding: 20px;
+    margin-bottom: 18px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.07);
+}
+
+.number-box {
+    margin-top: 12px;
     display: flex;
-    justify-content: center;
+    align-items: center;
     flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 15px;
+    gap: 9px;
 }
 
 .ball {
-    width: 55px;
-    height: 55px;
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
-    display: flex;
-    justify-content: center;
+    display: inline-flex;
     align-items: center;
-    color: #ffffff;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 17px;
+}
+
+.yellow { background: #f7d34a; }
+.blue   { background: #4aa8ff; }
+.red    { background: #ff5c5c; }
+.green  { background: #65c655; }
+.orange { background: #ff8b3d; }
+.black  { background: black; }
+
+.plus {
     font-size: 20px;
     font-weight: bold;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-    transition: transform .2s;
+    margin: 0 5px;
 }
 
-.ball:hover {
-    transform: scale(1.1);
+.btn {
+    margin-top: 12px;
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: #4169e1;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
 }
 
-/* 로또볼 색상 */
-.color-1 { background: #fbc02d; } /* 노랑 */
-.color-2 { background: #42a5f5; } /* 파랑 */
-.color-3 { background: #ef5350; } /* 빨강 */
-.color-4 { background: #66bb6a; } /* 초록 */
-.color-5 { background: #ff9800; } /* 주황 */
-.color-6 { background: #8e24aa; } /* 보라 */
-
-/* 보너스 */
-.bonus {
-    background: #000;
+.input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
 }
 
-/* 애니메이션 */
-.animate {
-    animation: pop 0.5s ease-out forwards;
+.pop {
+    animation: pop 0.35s ease;
 }
 
 @keyframes pop {
-    0% { transform: scale(0); opacity: 0; }
-    80% { transform: scale(1.2); opacity: 1; }
-    100% { transform: scale(1); }
+    0%   { transform: scale(0.3); opacity: 0.3; }
+    80%  { transform: scale(1.25); }
+    100% { transform: scale(1); opacity: 1; }
 }
 
-/* 모바일 전용 반응형 */
+/* 스마트폰 반응형 */
 @media (max-width: 480px) {
     .ball {
-        width: 45px;
-        height: 45px;
-        font-size: 18px;
+        width: 38px;
+        height: 38px;
+        font-size: 15px;
     }
-}
-
-/* 스마트폰 최적화 */
-@media (max-width: 600px) {
-    body {
-        padding: 10px;
-    }
-
-    .container {
-        width: 100%;
-        margin: 0;
-        padding: 15px;
-        border-radius: 15px;
-    }
-
-    h1 {
-        font-size: 1.6rem;
-        text-align: center;
-    }
-
-    .lotto-ball {
-        width: 42px;
-        height: 42px;
-        font-size: 1.1rem;
-        margin: 4px;
-    }
-
-    .numbers-box {
-        gap: 8px;
-        justify-content: center;
-    }
-
-    .generate-btn {
-        width: 100%;
-        padding: 14px;
-        font-size: 1.1rem;
-        border-radius: 12px;
-    }
-
-    header nav {
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .last-lotto-box {
-        padding: 10px;
-    }
-
-    button, .generate-btn {
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
-    }
-
-    .mobile-header {
-    position: sticky;
-    top: 0;
-    background: rgba(20,20,20,0.7);
-    backdrop-filter: blur(8px);
-    padding: 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    z-index: 999;
-}
-
-.mobile-header .logo {
-    font-size: 1.4rem;
-    font-weight: bold;
-    color: #fff;
-}
-
-.mobile-header nav {
-    display: flex;
-    gap: 15px;
-}
-
-.mobile-header nav a {
-    color: #fff;
-    text-decoration: none;
-    font-size: 1rem;
-}
-
-@media (prefers-color-scheme: dark) {
-    body {
-        background: #111;
-        color: #eee;
-    }
-
-    .container {
-        background: #1d1d1d;
-        box-shadow: 0 0 10px rgba(255,255,255,0.04);
-    }
-
-    .generate-btn {
-        background: #4d6bff;
-        color: white;
-    }
-
-    .mobile-header {
-        background: rgba(0,0,0,0.6);
-        border-bottom: 1px solid rgba(255,255,255,0.1);
-    }
-}
-
-
 }

@@ -1,42 +1,50 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify, request
 import random
 import requests
-import urllib3
-import os
-
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 app = Flask(__name__)
 
-def get_last_lotto_numbers():
-    """로또 최신 회차 + 번호 가져오기 (공식 API, SSL 오류 없음)"""
+# 캐싱: 최신 회차 번호 저장
+last_round_cache = None
 
-    # 1) 가장 최신 회차 번호를 가져오기 위한 요청
-    latest_info = requests.get(
-        "https://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo=1", verify=False
-    ).json()
-
-    # 위 URL로는 최신 회차를 알 수 없어서,
-    # 높은 숫자를 조회했을 때 없는 회차라면 'returnValue=fail'
-    # 존재하는 가장 최신 회차를 찾는 방식 사용
-    low, high = 1, 12000  # 2025년 기준 최대 약 1200회
-    last_round = 0
+def find_latest_round():
+    """최신 회차 번호를 빠르게 탐색(이진 탐색)"""
+    low, high = 1000, 2000
+    latest = 0
 
     while low <= high:
         mid = (low + high) // 2
         res = requests.get(
-            f"https://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo={mid}", verify=False
+            f"https://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo={mid}",
+            verify=False
         ).json()
 
         if res["returnValue"] == "success":
-            last_round = mid
+            latest = mid
             low = mid + 1
         else:
             high = mid - 1
 
-    # 2) 최종 최신 회차 번호로 실제 번호 조회
+    return latest
+
+
+def get_last_lotto_numbers():
+    """최신 회차 + 번호 가져오기"""
+
+    global last_round_cache
+
+    # 1) 캐시가 있으면 그대로 사용
+    if last_round_cache:
+        last_round = last_round_cache
+    else:
+        # 2) 최신 회차 번호 찾기
+        last_round = find_latest_round()
+        last_round_cache = last_round
+
+    # 3) 최신 회차 번호 조회
     data = requests.get(
-        f"https://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo={last_round}", verify=False
+        f"https://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo={last_round}",
+        verify=False
     ).json()
 
     numbers = [
@@ -52,23 +60,70 @@ def get_last_lotto_numbers():
     return last_round, numbers, bonus
 
 
+def get_round_numbers(round_no):
+    """특정 회차 번호 조회"""
+    data = requests.get(
+        f"https://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo={round_no}",
+        verify=False
+    ).json()
+
+    if data["returnValue"] == "fail":
+        return None
+
+    numbers = [
+        data["drwtNo1"],
+        data["drwtNo2"],
+        data["drwtNo3"],
+        data["drwtNo4"],
+        data["drwtNo5"],
+        data["drwtNo6"],
+    ]
+    bonus = data["bnusNo"]
+
+    return numbers, bonus
+
+def get_color(n):
+    if n <= 10:
+        return "yellow"
+    elif n <= 20:
+        return "blue"
+    elif n <= 30:
+        return "red"
+    elif n <= 40:
+        return "green"
+    else:
+        return "orange"
+
+
 @app.route("/")
 def index():
-    today_numbers = sorted(random.sample(range(1, 46), 6))
-
-    last_round, last_numbers, bonus = get_last_lotto_numbers()
+    today_nums = sorted(random.sample(range(1, 46), 6))
+    last_round, last_nums, bonus = get_last_lotto_numbers()
 
     return render_template(
         "index.html",
-        numbers=today_numbers,
+        today=today_nums,
         last_round=last_round,
-        last_numbers=last_numbers,
-        bonus=bonus
+        last_nums=last_nums,
+        bonus=bonus,
+        get_color=get_color
     )
 
 
+# AJAX: 새 번호 생성
+@app.route("/generate")
+def generate():
+    nums = sorted(random.sample(range(1, 46), 6))
+    return jsonify(nums)
+
+
+# AJAX: 원하는 회차 조회
+@app.route("/get_round")
+def get_round():
+    n = int(request.args.get("round"))
+    res = get_round_numbers(n)
+    return jsonify(res if res else {"error": "not found"})
+
+
 if __name__ == "__main__":
-    # Render가 할당한 포트 가져오기, 없으면 기본 5000
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=True)
-    # app.run(debug=True)
+    app.run(debug=True)
